@@ -1,29 +1,29 @@
 <div class="mt-3 pt-3 mx-4 px-4 pb-3 border border-5 border-dark rounded">
     <div class="row">
         <div class="col-sm-11">
-            <p style="font-weight: bold;">Tesla Inc (TSLA)</p>
+            <p style="font-weight: bold;">{{sentiment.description}} ({{sentiment.symbol}})</p>
         </div>
         <div class="col-sm-1">
-            <button type="button" class="mx-4 border border-2 border-dark rounded">❌</button>
+            <button type="button" class="mx-4 border border-2 border-dark rounded" (click)="delete(sentiment)">❌</button>
            
         </div>
     </div>
     <div class="row">
         <div class="col-sm-8">
            <div class="row">
-            <div class="col"> <P>change today: +5.6%</P> </div>
-            <div class="col"> <P>Opening price: $1,400</P> </div>
+            <div class="col"> <P>change today: {{sentiment.changeToday}}%</P> </div>
+            <div class="col"> <P>Opening price: {{sentiment.openingPrice | currency}}</P> </div>
            </div>
            <div class="row">
-            <div class="col"> <P>Current price: $1,562</P> </div>
-            <div class="col"> <P>High price: $1,750</P> </div>
+            <div class="col"> <P>Current price: {{sentiment.currentPrice | currency}}</P> </div>
+            <div class="col"> <P>High price: {{sentiment.highPrice | currency}}</P> </div>
            </div>
         </div>
         <div class="col-sm-4">
-            <span style="font-size: 50px; color: red;">↓</span>
-            <span style="font-size: 50px; color: green;">↑</span>
+            <span style="font-size: 50px; color: red;" *ngIf="sentiment.changeToday <= 0">↓</span>
+            <span style="font-size: 50px; color: green;" *ngIf="sentiment.changeToday > 0">↑</span>
         </div>
     </div>
-    <button type="button" class="mx-4 border border-2 border-dark rounded">Go to social sentiment details ></button>
+    <button type="button" class="mx-4 border border-2 border-dark rounded" (click)="goToSentimentDetails(sentiment)">Go to social sentiment details ></button>
     
 </div>
