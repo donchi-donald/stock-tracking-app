@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs';
-import { InsiderSentiment } from 'src/app/models/insider-sentiment';
 import { Sentiment } from 'src/app/models/sentiment';
 import { SentimentService } from 'src/app/services/sentiment.service';
+
 
 @Component({
   selector: 'app-home',
@@ -11,10 +10,11 @@ import { SentimentService } from 'src/app/services/sentiment.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
+  //for the formular
   trackStockFormGroup = new FormGroup({ symbolInput: new FormControl()});
-
+  //list of sentiments
   sentiments : Sentiment[] = [];
+
   constructor(private sentimentService: SentimentService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
@@ -26,9 +26,7 @@ export class HomeComponent implements OnInit {
  
 
   getSentiment(symbol: string){
-    //let sentiment : Sentiment; = new Sentiment();
     let sentiment : Sentiment = {symbol:"TSLA", description:"Tesla Inc", changeToday:0, currentPrice:0, highPrice:0, openingPrice: 0};
-   
     this.sentimentService.getCurrentStock(symbol).subscribe({
       next: (data) =>{
         sentiment.changeToday = data.d,
