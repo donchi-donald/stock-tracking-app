@@ -14,6 +14,8 @@ export class HomeComponent implements OnInit {
   trackStockFormGroup = new FormGroup({ symbolInput: new FormControl()});
   //list of sentiments
   sentiments : Sentiment[] = [];
+  description : string = "" ;
+  error: boolean = false;
 
   constructor(private sentimentService: SentimentService, private formBuilder: FormBuilder) { }
 
@@ -25,16 +27,21 @@ export class HomeComponent implements OnInit {
   get symbolInput() {return this.trackStockFormGroup.get('symbolInput')}
  
 
-  getSentiment(symbol: string){
-    let sentiment : Sentiment = {symbol:"TSLA", description:"Tesla Inc", changeToday:0, currentPrice:0, highPrice:0, openingPrice: 0};
+  getSentiment(symbol: string, description: string){
+    let sentiment : Sentiment = {symbol:symbol, description:description, changeToday:0, currentPrice:0, highPrice:0, openingPrice: 0};
     this.sentimentService.getCurrentStock(symbol).subscribe({
       next: (data) =>{
         sentiment.changeToday = data.d,
         sentiment.highPrice = data.h,
         sentiment.openingPrice = data.o,
-        sentiment.currentPrice = data.c,
-        this.getCompanyName(sentiment, symbol);
-        this.sentimentService.addCurrentStock(sentiment);
+        sentiment.currentPrice = data.c
+        if (data.d!==null || data.h !=0  || data.o !=0 || data.c!=0){
+          this.sentimentService.addCurrentStock(sentiment);
+          this.error= false;
+        }else{
+          this.error = true;
+        }
+        
       },
       error: (error)=>{
         console.log(error.message);
@@ -42,11 +49,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getCompanyName(sentiment: Sentiment, symbol: string){
+  getCompanyName(symbol: string){
     this.sentimentService.getCompanyName(symbol).subscribe({
       next: (data) =>{
-        sentiment.description = data.result[0].description,
-        sentiment.symbol = data.result[0].symbol
+        this.description = data.result[0].description
+        //sentiment.symbol = data.result[0].symbol
       },
       error: (error)=>{
         console.log(error.message);
@@ -66,7 +73,8 @@ export class HomeComponent implements OnInit {
       return;
     }
     let symbolInput = this.trackStockFormGroup.controls['symbolInput'].value;
-    this.getSentiment(symbolInput);
+    //this.getCompanyName(symbolInput);
+    this.getSentiment(symbolInput, this.description);
     this.trackStockFormGroup.reset;
   }
   

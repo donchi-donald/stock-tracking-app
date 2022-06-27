@@ -6,6 +6,9 @@
         <div *ngIf="symbolInput?.invalid && (symbolInput?.dirty || symbolInput?.touched)" class="alert alert-danger mt-1">
             <p>Please enter a 1 to 5-letter code!!!</p>
         </div>
+        <div *ngIf="error" class="alert alert-danger mt-1">
+            <p>SymbolInput ({{symbolInput?.value}}) invalid !!!</p>
+        </div>
     </div>
 </form>
 <app-sentiment *ngFor="let sentiment of sentiments" [sentiment]="sentiment"></app-sentiment>
